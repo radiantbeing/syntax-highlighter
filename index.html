@@ -10,21 +10,21 @@
   </head>
   <body>
     <h1>Syntax Highlighter</h1>
-    <textarea name="plain" id="plain" cols="30" rows="10"></textarea>
-    <button id="plainSubmit">Submit</button>
+    <!-- Select language -->
+    <h3>Plain Code</h3>
+    <label for="language-select">Language</label>
+    <select name="language" id="language-select"></select>
+    <br /><br />
+    <!-- Input plain code -->
+    <label for="plain-code">Code</label>
+    <textarea id="plain-code"></textarea>
+    <br /><br />
+    <button id="highlight-btn">Highlight!</button>
+    <!-- Output styled code -->
+    <h3>Highlighted Code</h3>
     <pre>
-        <code class="HTML">
-            #include <stdio.h>
-            printf("hello world!");
-        </code>
+        <code></code>
     </pre>
-    <script>
-        document.getElementById("plainSubmit").addEventListener("click", () => {
-            const plaintext = document.getElementById("plain").value;
-            document.querySelector("code").innerText = plaintext;
-            hljs.highlightAll();
-        })
-      hljs.highlightAll();
-    </script>
+    <script src="main.js"></script>
   </body>
 </html>
