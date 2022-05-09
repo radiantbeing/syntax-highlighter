@@ -14,6 +14,7 @@ for (let i = 0; i < listLang.length; i++) {
 
 // Hightlight 버튼
 document.getElementById("highlight-btn").addEventListener("click", (event) => {
+  event.preventDefault();
   const lang = document.getElementById("language-select").value;
   const code = document.getElementById("plain-code").value;
   changeLang(lang);
