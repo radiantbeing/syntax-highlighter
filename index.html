@@ -29,27 +29,32 @@
       </div>
     </nav>
     <div class="container-fluid">
-      <h3 class="mt-3 mb-3">Plain Code</h3>
-      <form>
-        <!-- Select language -->
-        <div class="mb-3">
-          <label class="form-label" for="language-select">Language</label>
-          <select class="form-select" name="language" id="language-select"></select>
+      <div class="row">
+        <div class="col-md">
+          <h3 class="mt-3 mb-3">Plain Code</h3>
+          <form>
+            <!-- Select language -->
+            <div class="mb-3">
+              <label class="form-label" for="language-select">Language</label>
+              <select class="form-select" name="language" id="language-select"></select>
+            </div>
+            <!-- Input plain code -->
+            <div class="mb-3">
+              <label class="form-label" for="plain-code">Code</label>
+              <textarea class="form-control" id="plain-code" rows="10"></textarea>
+            </div>
+            <button class="btn btn-primary" id="highlight-btn">Highlight!</button>
+            <input type="reset" class="btn btn-outline-dark" value="Reset" />
+          </form>
         </div>
-        <!-- Input plain code -->
-        <div class="mb-3">
-          <label class="form-label" for="plain-code">Code</label>
-          <textarea class="form-control" id="plain-code" rows="10"></textarea>
+        <div class="col-md">
+          <!-- Output styled code -->
+          <h3 class="mt-3">Highlighted Code</h3>
+          <pre>
+            <code></code>
+        </pre>
         </div>
-        <button class="btn btn-primary" id="highlight-btn">Highlight!</button>
-        <input type="reset" class="btn btn-outline-dark" value="Reset" />
-      </form>
-      <hr />
-      <!-- Output styled code -->
-      <h3>Highlighted Code</h3>
-      <pre>
-          <code></code>
-      </pre>
+      </div>
     </div>
     <script src="main.js"></script>
     <script
