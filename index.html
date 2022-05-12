@@ -18,6 +18,12 @@
       crossorigin="anonymous"
     />
     <title>Syntax Highlighter</title>
+    <style>
+      code {
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+      }
+    </style>
   </head>
   <body>
     <!-- Navigation -->
@@ -42,7 +48,7 @@
             <!-- Input plain code -->
             <div class="mb-3">
               <label class="form-label" for="plain-code">Code</label>
-              <textarea class="form-control" id="plain-code" rows="10"></textarea>
+              <textarea class="form-control" id="plain-code"></textarea>
             </div>
             <button class="btn btn-primary" id="highlight-btn">Highlight!</button>
             <input type="reset" class="btn btn-outline-dark" value="Reset" />
