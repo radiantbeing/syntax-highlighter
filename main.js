@@ -4,6 +4,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
 // Language 선택 목록
 const listLang = hljs.listLanguages();
+const el = document.createElement("option");
+const lang = "auto";
+el.innerText = lang;
+el.setAttribute("value", lang);
+document.getElementById("language-select").appendChild(el);
 for (let i = 0; i < listLang.length; i++) {
   const el = document.createElement("option");
   const lang = listLang[i];
@@ -17,9 +22,24 @@ document.getElementById("highlight-btn").addEventListener("click", (event) => {
   event.preventDefault();
   const lang = document.getElementById("language-select").value;
   const code = document.getElementById("plain-code").value;
-  changeLang(lang);
-  highlightWith(code);
+  if (lang == "auto") {
+    highlightAuto(code);
+  } else {
+    changeLang(lang);
+    highlightWith(code);
+  }
 });
+
+function removeClassByIndex(DOMelement, index) {
+  const classToDelete = Array.from(DOMelement.classList)[index];
+  DOMelement.classList.remove(classToDelete);
+}
+function highlightAuto(code) {
+  const $code = document.querySelector("pre code");
+  removeClassByIndex($code, 1);
+  $code.textContent = code;
+  hljs.highlightAll();
+}
 
 function highlightWith(code) {
   const $code = document.querySelector("pre code");
