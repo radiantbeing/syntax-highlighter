@@ -1,54 +1,69 @@
-document.addEventListener("DOMContentLoaded", (event) => {
+const languageLists = hljs.listLanguages();
+languageLists.unshift("auto"); // auto option 추가
+const languageSelector = document.getElementById("languageSelector");
+const highlightBtn = document.getElementById("highlightBtn");
+const plainCode = document.getElementById("plainCode");
+const highlightedCode = document.querySelector("pre code");
+const highlightedCodeLabel = document.getElementById("highlightedCodeLabel");
+
+document.addEventListener("DOMContentLoaded", () => {
   hljs.highlightAll();
+  createLanguageOptions();
+  addEventToHighlightBtn();
 });
 
-// Language 선택 목록
-const listLang = hljs.listLanguages();
-const el = document.createElement("option");
-const lang = "auto";
-el.innerText = lang;
-el.setAttribute("value", lang);
-document.getElementById("language-select").appendChild(el);
-for (let i = 0; i < listLang.length; i++) {
-  const el = document.createElement("option");
-  const lang = listLang[i];
-  el.innerText = lang;
-  el.setAttribute("value", lang);
-  document.getElementById("language-select").appendChild(el);
+// function 정의
+function createLanguageOptions() {
+  for (let i = 0; i < languageLists.length; i++) {
+    const option = document.createElement("option");
+    const language = languageLists[i];
+    option.innerText = language;
+    option.setAttribute("value", language);
+    languageSelector.appendChild(option);
+  }
 }
 
-// Hightlight 버튼
-document.getElementById("highlight-btn").addEventListener("click", (event) => {
-  event.preventDefault();
-  const lang = document.getElementById("language-select").value;
-  const code = document.getElementById("plain-code").value;
-  if (lang == "auto") {
-    highlightAuto(code);
-  } else {
-    changeLang(lang);
-    highlightWith(code);
-  }
-});
+function addEventToHighlightBtn() {
+  highlightBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const language = languageSelector.value;
+    const code = plainCode.value;
+
+    if (language == "auto") highlightAuto(code);
+    else highlightManual(code, language);
+
+    changeLanguageLabel();
+  });
+}
+
+function highlightAuto(code) {
+  removeClassByIndex(highlightedCode, 1);
+  highlightedCode.textContent = code;
+  hljs.highlightAll();
+}
+
+function highlightManual(code, lang) {
+  replaceLanguage(lang);
+  highlight(code);
+}
+
+function changeLanguageLabel() {
+  const currentLanguage = highlightedCode.classList.item(1).slice(9);
+  highlightedCodeLabel.innerText = `Code <${currentLanguage}>`;
+}
 
 function removeClassByIndex(DOMelement, index) {
   const classToDelete = Array.from(DOMelement.classList)[index];
   DOMelement.classList.remove(classToDelete);
 }
-function highlightAuto(code) {
-  const $code = document.querySelector("pre code");
-  removeClassByIndex($code, 1);
-  $code.textContent = code;
+
+function highlight(code) {
+  const highlightedCode = document.querySelector("pre code");
+  highlightedCode.textContent = code;
   hljs.highlightAll();
 }
 
-function highlightWith(code) {
-  const $code = document.querySelector("pre code");
-  $code.textContent = code;
-  hljs.highlightAll();
-}
-
-function changeLang(lang) {
-  const $code = document.querySelector("pre code");
-  const curLang = $code.classList.item(1);
-  $code.classList.replace(curLang, `language-${lang}`);
+function replaceLanguage(lang) {
+  const currentLanguage = highlightedCode.classList.item(1);
+  highlightedCode.classList.replace(currentLanguage, `language-${lang}`);
 }
