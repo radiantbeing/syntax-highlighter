@@ -4,7 +4,7 @@ const languageSelector = document.getElementById("languageSelector");
 const highlightBtn = document.getElementById("highlightBtn");
 const plainCode = document.getElementById("plainCode");
 const highlightedCode = document.querySelector("pre code");
-const highlightedCodeLabel = document.getElementById("highlightedCodeLabel");
+const languageBadge = document.getElementById("languageBadge");
 
 document.addEventListener("DOMContentLoaded", () => {
   hljs.highlightAll();
@@ -32,7 +32,7 @@ function addEventToHighlightBtn() {
     if (language == "auto") highlightAuto(code);
     else highlightManual(code, language);
 
-    changeLanguageLabel();
+    changeLanguageBadge();
   });
 }
 
@@ -47,9 +47,9 @@ function highlightManual(code, lang) {
   highlight(code);
 }
 
-function changeLanguageLabel() {
+function changeLanguageBadge() {
   const currentLanguage = highlightedCode.classList.item(1).slice(9);
-  highlightedCodeLabel.innerText = `Code <${currentLanguage}>`;
+  languageBadge.innerText = `${currentLanguage}`;
 }
 
 function removeClassByIndex(DOMelement, index) {
