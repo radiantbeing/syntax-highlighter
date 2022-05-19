@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
   addEventToHighlightBtn();
 });
 
+plainCode.addEventListener("input", (e) => autoGrow(e.target));
+
 // function 정의
 function createLanguageOptions() {
   for (let i = 0; i < languageLists.length; i++) {
@@ -66,4 +68,9 @@ function highlight(code) {
 function replaceLanguage(lang) {
   const currentLanguage = highlightedCode.classList.item(1);
   highlightedCode.classList.replace(currentLanguage, `language-${lang}`);
+}
+
+function autoGrow(DOMelement) {
+  DOMelement.style.height = "65px";
+  DOMelement.style.height = DOMelement.scrollHeight + "px";
 }
