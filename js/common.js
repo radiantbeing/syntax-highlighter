@@ -1,6 +1,24 @@
+"use strict";
+
+function enableTab(inputElement) {
+  document.getElementById(inputElement).addEventListener("keydown", function (event) {
+    if (event.key == "Tab") {
+      event.preventDefault();
+      const start = this.selectionStart;
+      const end = this.selectionEnd;
+
+      this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+
+      this.selectionStart = this.selectionEnd = start + 1;
+    }
+  });
+}
+
+enableTab("plainCode");
+
 const languageLists = hljs.listLanguages();
 languageLists.unshift("auto"); // auto option 추가
-const languageSelector = document.getElementById("languageSelector");
+const languageSelection = document.getElementById("languageSelection");
 const highlightBtn = document.getElementById("highlightBtn");
 const plainCode = document.getElementById("plainCode");
 const highlightedCode = document.querySelector("pre code");
@@ -21,14 +39,14 @@ function createLanguageOptions() {
     const language = languageLists[i];
     option.innerText = language;
     option.setAttribute("value", language);
-    languageSelector.appendChild(option);
+    languageSelection.appendChild(option);
   }
 }
 
 function addEventToHighlightBtn() {
   highlightBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    const language = languageSelector.value;
+    const language = languageSelection.value;
     const code = plainCode.value;
 
     if (language == "auto") highlightAuto(code);
