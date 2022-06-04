@@ -111,7 +111,7 @@ function getRecognizedLanguage() {
 /**
  * Change content of Badge element.
  */
-function changeLanguageBadge() {
+function updateLanguageBadge() {
   const currentLanguage = getRecognizedLanguage();
   languageBadge.innerText = `${currentLanguage}`;
 }
@@ -131,7 +131,7 @@ function highlightHandler(event) {
   if (language == "auto") highlightAuto(code);
   else highlightManual(code, language);
 
-  changeLanguageBadge();
+  updateLanguageBadge();
 }
 
 /**
@@ -143,6 +143,10 @@ function highlightAuto(code) {
   const highlightedCode = QS("pre code");
   highlightedCode.textContent = code;
   hljs.highlightAll();
+
+  if (getRecognizedLanguage() == "undefined") {
+    highlightManual(code, "plaintext");
+  }
 }
 
 /**
