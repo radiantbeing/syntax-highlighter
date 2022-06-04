@@ -1,5 +1,71 @@
 "use strict";
 
+/**
+ * Shortcut of 'document.quertSelector()'
+ * @param {String} name
+ * @returns DOMelement
+ */
+function QS(name) {
+  return document.querySelector(name);
+}
+
+/**
+ * Shortcut of 'document.createElement()'
+ *
+ * @param {String} name
+ * @returns
+ */
+function createElement(name) {
+  return document.createElement(name);
+}
+
+/**
+ * Get class name by index
+ * @param {DOMelement} element
+ * @param {Integer} index
+ * @returns class name of DOMelement at index
+ */
+function getClassByIndex(element, index) {
+  return Array.from(element.classList)[index];
+}
+
+/**
+ * Remove class which includes input string
+ * @param {DOMelement} DOMelement
+ * @param {String} string
+ * @returns if success return true, or not false
+ */
+function removeClassInclude(DOMelement, string) {
+  const classList = DOMelement.classList;
+  classList.forEach((element) => {
+    if (element.includes(string)) classList.remove(element);
+    return true;
+  });
+  return false;
+}
+
+/**
+ * Create <optgroup></optgroup> element by input array
+ * @param {Array of String} array
+ * @param {String} label
+ * @returns optgroup element
+ */
+function createOptgroup(array, label) {
+  const optgroup = createElement("optgroup");
+  optgroup.label = label;
+  for (let i = 0; i < array.length; i++) {
+    const option = createElement("option");
+    option.textContent = array[i];
+    option.setAttribute("value", array[i]);
+    optgroup.appendChild(option);
+  }
+  return optgroup;
+}
+
+/**
+ * Enable input '\t' on inputElement
+ * @param {DOMelement} inputElement
+ */
 function enableTab(inputElement) {
   document.getElementById(inputElement).addEventListener("keydown", function (event) {
     if (event.key == "Tab") {
@@ -14,81 +80,121 @@ function enableTab(inputElement) {
   });
 }
 
-enableTab("plainCode");
-
-const languageLists = hljs.listLanguages();
-languageLists.unshift("auto"); // auto option 추가
-const languageSelection = document.getElementById("languageSelection");
-const highlightBtn = document.getElementById("highlightBtn");
-const plainCode = document.getElementById("plainCode");
-const highlightedCode = document.querySelector("pre code");
-const languageBadge = document.getElementById("languageBadge");
-
-document.addEventListener("DOMContentLoaded", () => {
-  hljs.highlightAll();
-  createLanguageOptions();
-  addEventToHighlightBtn();
-});
-
-plainCode.addEventListener("input", (e) => autoGrow(e.target));
-
-// function 정의
-function createLanguageOptions() {
-  for (let i = 0; i < languageLists.length; i++) {
-    const option = document.createElement("option");
-    const language = languageLists[i];
-    option.innerText = language;
-    option.setAttribute("value", language);
-    languageSelection.appendChild(option);
-  }
-}
-
-function addEventToHighlightBtn() {
-  highlightBtn.addEventListener("click", (e) => {
-    e.preventDefault();
-    const language = languageSelection.value;
-    const code = plainCode.value;
-
-    if (language == "auto") highlightAuto(code);
-    else highlightManual(code, language);
-
-    changeLanguageBadge();
+/**
+ * If one of classes of DOMelement includes input string return it
+ *
+ * @param {DOMelement} DOMelement
+ * @param {String} string
+ * @returns class name
+ */
+function getClassIncludes(DOMelement, string) {
+  const classList = DOMelement.classList;
+  let result = null;
+  classList.forEach((element) => {
+    if (element.includes(string)) {
+      result = element;
+    }
   });
+  return result;
 }
 
-function highlightAuto(code) {
-  removeClassByIndex(highlightedCode, 1);
-  highlightedCode.textContent = code;
-  hljs.highlightAll();
+/**
+ * get current recognized language
+ *
+ * @returns current recognized language
+ */
+function getRecognizedLanguage() {
+  let result = getClassIncludes(QS(".highlight-text"), "language");
+  return result.slice(9);
 }
 
-function highlightManual(code, lang) {
-  replaceLanguage(lang);
-  highlight(code);
-}
-
+/**
+ * Change content of Badge element.
+ */
 function changeLanguageBadge() {
-  const currentLanguage = highlightedCode.classList.item(1).slice(9);
+  const currentLanguage = getRecognizedLanguage();
   languageBadge.innerText = `${currentLanguage}`;
 }
 
-function removeClassByIndex(DOMelement, index) {
-  const classToDelete = Array.from(DOMelement.classList)[index];
-  DOMelement.classList.remove(classToDelete);
+/**
+ * Handler of 'Highlight!' button
+ *
+ * @param {Object} event
+ */
+function highlightHandler(event) {
+  event.preventDefault();
+
+  const plainCode = document.getElementById("plainCode");
+  const language = languageSelection.value;
+  const code = plainCode.value;
+
+  if (language == "auto") highlightAuto(code);
+  else highlightManual(code, language);
+
+  changeLanguageBadge();
 }
 
-function highlight(code) {
-  const highlightedCode = document.querySelector("pre code");
+/**
+ * Highlight code in auto mode
+ * @param {String} code
+ */
+function highlightAuto(code) {
+  removeClassInclude(QS(".highlight-text"), "language");
+  const highlightedCode = QS("pre code");
   highlightedCode.textContent = code;
   hljs.highlightAll();
 }
 
-function replaceLanguage(lang) {
-  const currentLanguage = highlightedCode.classList.item(1);
-  highlightedCode.classList.replace(currentLanguage, `language-${lang}`);
+/**
+ * Highlight code in manual mode
+ * @param {String} code
+ * @param {String} lang
+ */
+function highlightManual(code, lang) {
+  replaceLanguage(lang);
+
+  const highlightedCode = QS("pre code");
+  highlightedCode.textContent = code;
+  hljs.highlightAll();
 }
 
+/**
+ * Replace language to input 'lang'
+ * @param {String} lang
+ */
+function replaceLanguage(lang) {
+  const highlightedCode = QS("pre code");
+  const currentLangClass = getClassIncludes(QS(".highlight-text"), "language");
+  highlightedCode.classList.replace(currentLangClass, `language-${lang}`);
+}
+
+/**
+ * Enable autogrow when user input 'Enter' in input area
+ * @param {*} DOMelement
+ */
 function autoGrow(DOMelement) {
   DOMelement.style.height = "65px";
   DOMelement.style.height = DOMelement.scrollHeight + "px";
 }
+
+/**
+ * Main Function
+ */
+(function main() {
+  hljs.highlightAll();
+
+  const highlightBtn = document.getElementById("highlightBtn");
+  highlightBtn.addEventListener("click", highlightHandler);
+
+  const plainCode = document.getElementById("plainCode");
+  plainCode.addEventListener("input", (e) => autoGrow(e.target));
+
+  // Add <optgroup> of languages to <select> tag
+  const languageSelection = QS("#languageSelection");
+  const languages = hljs.listLanguages();
+  languages.unshift("auto");
+  const languageOptGroup = createOptgroup(languages, "Languages");
+  languageSelection.appendChild(languageOptGroup);
+
+  enableTab("plainCode");
+})();
