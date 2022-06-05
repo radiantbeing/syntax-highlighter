@@ -63,24 +63,6 @@ function createOptgroup(array, label) {
 }
 
 /**
- * Enable input '\t' on inputElement
- * @param {DOMelement} inputElement
- */
-function enableTab(inputElement) {
-  document.getElementById(inputElement).addEventListener("keydown", function (event) {
-    if (event.key == "Tab") {
-      event.preventDefault();
-      const start = this.selectionStart;
-      const end = this.selectionEnd;
-
-      this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
-
-      this.selectionStart = this.selectionEnd = start + 1;
-    }
-  });
-}
-
-/**
  * If one of classes of DOMelement includes input string return it
  *
  * @param {DOMelement} DOMelement
@@ -173,25 +155,13 @@ function replaceLanguage(lang) {
 }
 
 /**
- * Enable autogrow when user input 'Enter' in input area
- * @param {*} DOMelement
+ * Main Function of this js context
  */
-function autoGrow(DOMelement) {
-  DOMelement.style.height = "65px";
-  DOMelement.style.height = DOMelement.scrollHeight + "px";
-}
-
-/**
- * Main Function
- */
-(function main() {
+(function () {
   hljs.highlightAll();
 
   const highlightBtn = document.getElementById("highlightBtn");
   highlightBtn.addEventListener("click", highlightHandler);
-
-  const plainCode = document.getElementById("plainCode");
-  plainCode.addEventListener("input", (e) => autoGrow(e.target));
 
   // Add <optgroup> of languages to <select> tag
   const languageSelection = QS("#languageSelection");
@@ -199,6 +169,4 @@ function autoGrow(DOMelement) {
   languages.unshift("auto");
   const languageOptGroup = createOptgroup(languages, "Languages");
   languageSelection.appendChild(languageOptGroup);
-
-  enableTab("plainCode");
 })();
