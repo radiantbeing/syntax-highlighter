@@ -6,12 +6,12 @@ function enableTab(DOMelement) {
   QS(DOMelement).addEventListener("keydown", (event) => {
     if (event.key == "Tab") {
       event.preventDefault();
-      const start = this.selectionStart;
-      const end = this.selectionEnd;
+      const start = event.target.selectionStart;
+      const end = event.target.selectionEnd;
 
-      this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+      event.target.value = event.target.value.substring(0, start) + "\t" + event.target.value.substring(end);
 
-      this.selectionStart = this.selectionEnd = start + 1;
+      event.target.selectionStart = event.target.selectionEnd = start + 1;
     }
   });
 }
